@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagamento confirmado — Do "Oi, quanto custa?" ao Pix na sua conta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-dark: #16221c;
+    --bg-dark-2: #1c2f26;
+    --green-mint: #8fe0b8;
+    --green-deep: #1f5c3f;
+    --text-light: #f3f1e9;
+    --text-light-soft: #b9c4bd;
+    --gold: #c9a24b;
+    --shadow: 0 20px 50px -20px rgba(20,30,25,0.45);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(143,224,184,0.10), transparent 60%),
+      var(--bg-dark);
+    color:var(--text-light);
+    font-family:'Inter',sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2{font-family:'Fraunces',serif; font-weight:700; letter-spacing:-0.01em; line-height:1.1; margin:0;}
+  .card{
+    max-width:520px;
+    width:100%;
+    background:#101c17;
+    border:1px solid rgba(143,224,184,0.25);
+    border-radius:24px;
+    padding:44px 36px;
+    text-align:center;
+    box-shadow:var(--shadow);
+  }
+  .icon{
+    width:64px;height:64px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 20px;
+    font-size:30px;
+  }
+  .icon.ok{background:rgba(143,224,184,0.15); color:var(--green-mint);}
+  .icon.wait{background:rgba(201,162,75,0.15); color:var(--gold);}
+  .icon.err{background:rgba(255,120,100,0.15); color:#ff9b8a;}
+  h1{font-size:26px; margin-bottom:12px;}
+  p.sub{color:var(--text-light-soft); font-size:15px; margin:0 0 28px;}
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    width:100%;
+    padding:17px 28px;
+    border-radius:12px;
+    font-weight:700;
+    font-size:16px;
+    text-decoration:none;
+    border:none;
+    cursor:pointer;
+    background:var(--green-mint);
+    color:#0e2117;
+    box-shadow:0 14px 30px -12px rgba(143,224,184,0.55);
+    transition:transform .15s ease;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn:focus-visible{outline:3px solid var(--gold); outline-offset:3px;}
+  .spinner{
+    width:34px;height:34px;
+    border-radius:50%;
+    border:3px solid rgba(201,162,75,0.25);
+    border-top-color:var(--gold);
+    animation:spin 0.9s linear infinite;
+    margin:0 auto 20px;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .whatsapp-link{color:var(--green-mint); text-decoration:underline;}
+  .hidden{display:none;}
+  .note{margin-top:22px; font-size:12.5px; color:var(--text-light-soft);}
+  @media (prefers-reduced-motion: reduce){
+    .spinner{animation:none; border-top-color:var(--gold);}
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- Estado: verificando -->
+  <div id="state-checking">
+    <div class="spinner"></div>
+    <h1>Confirmando seu pagamento...</h1>
+    <p class="sub">Isso costuma levar só alguns segundos. Não feche essa página.</p>
+  </div>
+
+  <!-- Estado: pago -->
+  <div id="state-paid" class="hidden">
+    <div class="icon ok">✓</div>
+    <h1>Pagamento confirmado!</h1>
+    <p class="sub">Seu ebook já está liberado. Clique abaixo pra baixar.</p>
+    <a href="/ebook.pdf" download class="btn">Baixar o ebook agora</a>
+    <p class="note">Guarde esse link ou salve o PDF no seu celular. Qualquer dúvida, <a class="whatsapp-link" href="https://wa.me/5532998605463" target="_blank" rel="noopener">chama no WhatsApp</a>.</p>
+  </div>
+
+  <!-- Estado: ainda não identificado -->
+  <div id="state-pending" class="hidden">
+    <div class="icon wait">⏳</div>
+    <h1>Ainda não identificamos seu pagamento</h1>
+    <p class="sub">Se você acabou de pagar, aguarde mais alguns segundos e tentaremos de novo automaticamente. Se já se passou mais de um minuto, me chama no WhatsApp com o comprovante que eu libero na mão.</p>
+    <a href="https://wa.me/5532998605463?text=Ol%C3%A1%2C%20Gabriel!%20Paguei%20o%20ebook%20mas%20a%20p%C3%A1gina%20n%C3%A3o%20confirmou%2C%20segue%20o%20comprovante%3A" target="_blank" rel="noopener" class="btn">Falar no WhatsApp</a>
+  </div>
+
+  <!-- Estado: erro / sem dados -->
+  <div id="state-error" class="hidden">
+    <div class="icon err">!</div>
+    <h1>Não encontramos os dados do pagamento</h1>
+    <p class="sub">Parece que você chegou nessa página sem vir de um pagamento. Se você pagou e caiu aqui por engano, me chama no WhatsApp com o comprovante.</p>
+    <a href="https://wa.me/5532998605463" target="_blank" rel="noopener" class="btn">Falar no WhatsApp</a>
+  </div>
+
+</div>
+
+<script>
+  const MAX_ATTEMPTS = 6;
+  const RETRY_DELAY_MS = 4000;
+
+  const showState = (id) => {
+    ['state-checking','state-paid','state-pending','state-error'].forEach(s => {
+      document.getElementById(s).classList.toggle('hidden', s !== id);
+    });
+  };
+
+  const params = new URLSearchParams(window.location.search);
+  const orderNsu = params.get('order_nsu');
+  const transactionNsu = params.get('transaction_nsu');
+  const slug = params.get('slug');
+
+  if (!orderNsu || !transactionNsu) {
+    showState('state-error');
+  } else {
+    let attempts = 0;
+
+    const checkPayment = async () => {
+      attempts++;
+      try {
+        const res = await fetch('/.netlify/functions/check-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            order_nsu: orderNsu,
+            transaction_nsu: transactionNsu,
+            slug: slug
+          })
+        });
+
+        const data = await res.json();
+
+        if (data && data.paid === true) {
+          showState('state-paid');
+          return;
+        }
+
+        if (attempts < MAX_ATTEMPTS) {
+          setTimeout(checkPayment, RETRY_DELAY_MS);
+        } else {
+          showState('state-pending');
+        }
+      } catch (err) {
+        if (attempts < MAX_ATTEMPTS) {
+          setTimeout(checkPayment, RETRY_DELAY_MS);
+        } else {
+          showState('state-pending');
+        }
+      }
+    };
+
+    checkPayment();
+  }
+</script>
+
+</body>
+</html>
