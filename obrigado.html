@@ -112,6 +112,23 @@ p.sub{color:var(--gray); font-size:15.5px; margin:0 0 30px;}
   .spinner{animation:none; border-top-color:var(--gold);}
 }
 </style>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1768433614162857');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1768433614162857&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 </head>
 <body>
 
@@ -191,6 +208,11 @@ p.sub{color:var(--gray); font-size:15.5px; margin:0 0 30px;}
         const data = await res.json();
 
         if (data && data.paid === true) {
+          const purchaseKey = 'purchase_tracked_' + transactionNsu;
+          if (typeof fbq === 'function' && !localStorage.getItem(purchaseKey)) {
+            fbq('track', 'Purchase', { value: 47, currency: 'BRL' });
+            localStorage.setItem(purchaseKey, '1');
+          }
           showState('state-paid');
           return;
         }
