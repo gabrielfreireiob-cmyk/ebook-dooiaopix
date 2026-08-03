@@ -1,23 +1,23 @@
 exports.handler = async function (event) {
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
-  }
-
-  let body;
   try {
-    body = JSON.parse(event.body || '{}');
-  } catch (err) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'JSON inválido' }) };
-  }
+    if (event.httpMethod !== 'POST') {
+      return { statusCode: 405, body: 'Method Not Allowed' };
+    }
 
-  const { order_nsu, transaction_nsu, slug } = body;
+    let body;
+    try {
+      body = JSON.parse(event.body || '{}');
+    } catch (err) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'JSON inválido' }) };
+    }
 
-  if (!order_nsu || !transaction_nsu) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'Faltam dados do pedido' }) };
-  }
+    const { order_nsu, transaction_nsu, slug } = body;
 
-  try {
-    const res = await fetch('https://api.infinitepay.io/invoices/public/checkout/payment_check', {
+    if (!order_nsu || !transaction_nsu) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'Faltam dados do pedido' }) };
+    }
+
+    const res = await fetch('https://api.checkout.infinitepay.io/payment_check', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -28,7 +28,17 @@ exports.handler = async function (event) {
       })
     });
 
-    const data = await res.json();
+    const text = await res.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (parseErr) {
+      return {
+        statusCode: 502,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: 'Resposta inesperada da InfinitePay', raw: text })
+      };
+    }
 
     return {
       statusCode: res.status,
@@ -39,7 +49,7 @@ exports.handler = async function (event) {
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: 'Erro ao verificar pagamento', details: err.message })
+      body: JSON.stringify({ error: 'Erro ao verificar pagamento', details: err.message, stack: err.stack })
     };
   }
 };
