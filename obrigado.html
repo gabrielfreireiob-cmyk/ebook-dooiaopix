@@ -108,6 +108,19 @@ p.sub{color:var(--gray); font-size:15.5px; margin:0 0 30px;}
 .whatsapp-link{color:var(--mint); text-decoration:underline;}
 .hidden{display:none;}
 .note{margin-top:24px; font-size:12.5px; color:var(--gray); line-height:1.7;}
+.whatsapp-form{display:flex; flex-direction:column; gap:12px; margin-top:6px;}
+.whatsapp-input{
+  width:100%;
+  padding:15px 16px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.16);
+  background:rgba(255,255,255,0.05);
+  color:var(--white);
+  font-family:'Inter',sans-serif;
+  font-size:15px;
+}
+.whatsapp-input::placeholder{color:var(--gray);}
+.whatsapp-input:focus-visible{outline:2px solid var(--mint); outline-offset:2px;}
 @media (prefers-reduced-motion: reduce){
   .spinner{animation:none; border-top-color:var(--gold);}
 }
@@ -147,9 +160,21 @@ src="https://www.facebook.com/tr?id=1768433614162857&ev=PageView&noscript=1"
     <span class="mono">Pagamento aprovado</span>
     <div class="icon ok">✓</div>
     <h1>Pagamento confirmado!</h1>
-    <p class="sub">Seu método já está liberado. Clique abaixo pra baixar.</p>
-    <a href="/ebook.pdf" download="Método - Do oi quanto custa ao Pix na sua conta.pdf" class="btn">Baixar o método agora</a>
-    <p class="note">Guarde esse link ou salve o PDF no seu celular. Qualquer dúvida, <a class="whatsapp-link" href="https://wa.me/5532998605463" target="_blank" rel="noopener">chama no WhatsApp</a>.</p>
+
+    <div id="whatsapp-gate">
+      <p class="sub">Antes de baixar, deixa seu WhatsApp aqui, é o backup pra garantir que você recebe o material mesmo se perder esse link.</p>
+      <form name="whatsapp-lead" method="POST" data-netlify="true" id="whatsapp-form" class="whatsapp-form">
+        <input type="hidden" name="form-name" value="whatsapp-lead" />
+        <input type="tel" name="whatsapp" id="whatsapp-input" required placeholder="Seu WhatsApp com DDD" class="whatsapp-input" inputmode="tel">
+        <button type="submit" class="btn">Confirmar e liberar download</button>
+      </form>
+    </div>
+
+    <div id="download-section" class="hidden">
+      <p class="sub">Seu método já está liberado. Clique abaixo pra baixar.</p>
+      <a href="/ebook.pdf" download="Método - Do oi quanto custa ao Pix na sua conta.pdf" class="btn">Baixar o método agora</a>
+      <p class="note">Guarde esse link ou salve o PDF no seu celular. Qualquer dúvida, <a class="whatsapp-link" href="https://wa.me/5532998605463" target="_blank" rel="noopener">chama no WhatsApp</a>.</p>
+    </div>
   </div>
 
   <!-- Estado: ainda não identificado -->
@@ -232,6 +257,33 @@ src="https://www.facebook.com/tr?id=1768433614162857&ev=PageView&noscript=1"
     };
 
     checkPayment();
+  }
+
+  const whatsappForm = document.getElementById('whatsapp-form');
+  if (whatsappForm) {
+    whatsappForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(whatsappForm);
+      const submitBtn = whatsappForm.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Confirmando...';
+
+      const revealDownload = () => {
+        document.getElementById('whatsapp-gate').classList.add('hidden');
+        document.getElementById('download-section').classList.remove('hidden');
+      };
+
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData).toString()
+      })
+        .then(() => revealDownload())
+        .catch(() => revealDownload());
+      // Se o salvamento falhar por qualquer motivo, o download libera
+      // do mesmo jeito: quem já pagou nunca fica travado por causa disso.
+    });
   }
 </script>
 
