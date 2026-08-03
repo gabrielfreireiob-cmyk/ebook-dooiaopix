@@ -15,7 +15,7 @@ exports.handler = async function (event) {
       redirect_url: redirectUrl,
       order_nsu: orderNsu,
       items: [
-        { quantity: 1, price: 4700, description: 'Ebook - Do oi quanto custa ao Pix na sua conta' }
+        { quantity: 1, price: 4700, description: 'Metodo - Do oi quanto custa ao Pix na sua conta' }
       ]
     };
 
