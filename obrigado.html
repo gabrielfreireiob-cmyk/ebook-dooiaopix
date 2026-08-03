@@ -3,95 +3,114 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pagamento confirmado — Do "Oi, quanto custa?" ao Pix na sua conta</title>
+<title>Pagamento confirmado: Do "Oi, quanto custa?" ao Pix na sua conta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg-dark: #16221c;
-    --bg-dark-2: #1c2f26;
-    --green-mint: #8fe0b8;
-    --green-deep: #1f5c3f;
-    --text-light: #f3f1e9;
-    --text-light-soft: #b9c4bd;
-    --gold: #c9a24b;
-    --shadow: 0 20px 50px -20px rgba(20,30,25,0.45);
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:24px;
-    background:
-      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(143,224,184,0.10), transparent 60%),
-      var(--bg-dark);
-    color:var(--text-light);
-    font-family:'Inter',sans-serif;
-    line-height:1.55;
-    -webkit-font-smoothing:antialiased;
-  }
-  h1,h2{font-family:'Fraunces',serif; font-weight:700; letter-spacing:-0.01em; line-height:1.1; margin:0;}
-  .card{
-    max-width:520px;
-    width:100%;
-    background:#101c17;
-    border:1px solid rgba(143,224,184,0.25);
-    border-radius:24px;
-    padding:44px 36px;
-    text-align:center;
-    box-shadow:var(--shadow);
-  }
-  .icon{
-    width:64px;height:64px;
-    border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    margin:0 auto 20px;
-    font-size:30px;
-  }
-  .icon.ok{background:rgba(143,224,184,0.15); color:var(--green-mint);}
-  .icon.wait{background:rgba(201,162,75,0.15); color:var(--gold);}
-  .icon.err{background:rgba(255,120,100,0.15); color:#ff9b8a;}
-  h1{font-size:26px; margin-bottom:12px;}
-  p.sub{color:var(--text-light-soft); font-size:15px; margin:0 0 28px;}
-  .btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
-    width:100%;
-    padding:17px 28px;
-    border-radius:12px;
-    font-weight:700;
-    font-size:16px;
-    text-decoration:none;
-    border:none;
-    cursor:pointer;
-    background:var(--green-mint);
-    color:#0e2117;
-    box-shadow:0 14px 30px -12px rgba(143,224,184,0.55);
-    transition:transform .15s ease;
-  }
-  .btn:hover{transform:translateY(-2px);}
-  .btn:focus-visible{outline:3px solid var(--gold); outline-offset:3px;}
-  .spinner{
-    width:34px;height:34px;
-    border-radius:50%;
-    border:3px solid rgba(201,162,75,0.25);
-    border-top-color:var(--gold);
-    animation:spin 0.9s linear infinite;
-    margin:0 auto 20px;
-  }
-  @keyframes spin{ to{ transform:rotate(360deg); } }
-  .whatsapp-link{color:var(--green-mint); text-decoration:underline;}
-  .hidden{display:none;}
-  .note{margin-top:22px; font-size:12.5px; color:var(--text-light-soft);}
-  @media (prefers-reduced-motion: reduce){
-    .spinner{animation:none; border-top-color:var(--gold);}
-  }
+:root{
+  --black: #000000;
+  --card: #111311;
+  --white: #f4f2ea;
+  --white-pure: #ffffff;
+  --mint: #8fe0b8;
+  --mint-deep: #4d8a6b;
+  --gray: #8b9089;
+  --line: rgba(255,255,255,0.09);
+  --gold: #c9a24b;
+  --danger: #ff9b8a;
+  --r-lg: 28px;
+  --ease: cubic-bezier(.16,.8,.24,1);
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:
+    radial-gradient(ellipse 800px 500px at 50% -10%, rgba(143,224,184,0.10), transparent 65%),
+    var(--black);
+  color:var(--white);
+  font-family:'Inter',sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+h1{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  letter-spacing:-0.02em;
+  line-height:1.08;
+  margin:0 0 14px;
+  color:var(--white-pure);
+}
+.mono{
+  font-family:'Space Mono',monospace;
+  text-transform:uppercase;
+  letter-spacing:0.14em;
+  font-size:11px;
+  font-weight:700;
+  color:var(--mint);
+  display:block;
+  margin-bottom:18px;
+}
+.card{
+  max-width:540px;
+  width:100%;
+  background:var(--card);
+  border:1px solid rgba(143,224,184,0.22);
+  border-radius:32px;
+  padding:52px 40px;
+  text-align:center;
+  box-shadow:0 40px 90px -40px rgba(0,0,0,0.8);
+}
+.icon{
+  width:68px;height:68px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 22px;
+  font-size:30px;
+}
+.icon.ok{background:rgba(143,224,184,0.14); color:var(--mint); border:1px solid rgba(143,224,184,0.3);}
+.icon.wait{background:rgba(201,162,75,0.14); color:var(--gold); border:1px solid rgba(201,162,75,0.3);}
+.icon.err{background:rgba(255,120,100,0.14); color:var(--danger); border:1px solid rgba(255,120,100,0.3);}
+p.sub{color:var(--gray); font-size:15.5px; margin:0 0 30px;}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  width:100%;
+  padding:18px 28px;
+  border-radius:999px;
+  font-weight:700;
+  font-size:16px;
+  text-decoration:none;
+  border:none;
+  cursor:pointer;
+  background:var(--mint);
+  color:#04140c;
+  transition:transform .35s var(--ease), box-shadow .35s var(--ease);
+}
+.btn:hover{transform:translateY(-3px); box-shadow:0 22px 40px -14px rgba(143,224,184,0.5);}
+.btn:focus-visible{outline:2px solid var(--mint); outline-offset:4px;}
+.spinner{
+  width:38px;height:38px;
+  border-radius:50%;
+  border:3px solid rgba(201,162,75,0.2);
+  border-top-color:var(--gold);
+  animation:spin 0.9s linear infinite;
+  margin:0 auto 24px;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.whatsapp-link{color:var(--mint); text-decoration:underline;}
+.hidden{display:none;}
+.note{margin-top:24px; font-size:12.5px; color:var(--gray); line-height:1.7;}
+@media (prefers-reduced-motion: reduce){
+  .spinner{animation:none; border-top-color:var(--gold);}
+}
 </style>
 </head>
 <body>
@@ -100,6 +119,7 @@
 
   <!-- Estado: verificando -->
   <div id="state-checking">
+    <span class="mono">Verificando</span>
     <div class="spinner"></div>
     <h1>Confirmando seu pagamento...</h1>
     <p class="sub">Isso costuma levar só alguns segundos. Não feche essa página.</p>
@@ -107,6 +127,7 @@
 
   <!-- Estado: pago -->
   <div id="state-paid" class="hidden">
+    <span class="mono">Pagamento aprovado</span>
     <div class="icon ok">✓</div>
     <h1>Pagamento confirmado!</h1>
     <p class="sub">Seu ebook já está liberado. Clique abaixo pra baixar.</p>
@@ -116,6 +137,7 @@
 
   <!-- Estado: ainda não identificado -->
   <div id="state-pending" class="hidden">
+    <span class="mono" style="color:var(--gold);">Aguardando confirmação</span>
     <div class="icon wait">⏳</div>
     <h1>Ainda não identificamos seu pagamento</h1>
     <p class="sub">Se você acabou de pagar, aguarde mais alguns segundos e tentaremos de novo automaticamente. Se já se passou mais de um minuto, me chama no WhatsApp com o comprovante que eu libero na mão.</p>
@@ -124,6 +146,7 @@
 
   <!-- Estado: erro / sem dados -->
   <div id="state-error" class="hidden">
+    <span class="mono" style="color:var(--danger);">Algo não bateu</span>
     <div class="icon err">!</div>
     <h1>Não encontramos os dados do pagamento</h1>
     <p class="sub">Parece que você chegou nessa página sem vir de um pagamento. Se você pagou e caiu aqui por engano, me chama no WhatsApp com o comprovante.</p>
